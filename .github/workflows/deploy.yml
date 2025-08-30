@@ -22,6 +22,18 @@ jobs:
         run: npm run build --if-present
       - name: Debug dist
         run: ls -R dist || true
+      - name: Validate required secrets
+        run: |
+          missing=0
+          [ -n "${{ secrets.FTP_HOST }}" ] || { echo "::error::Missing secret FTP_HOST"; missing=1; }
+          [ -n "${{ secrets.FTP_USERNAME }}" ] || { echo "::error::Missing secret FTP_USERNAME"; missing=1; }
+            # Do not echo password value
+          [ -n "${{ secrets.FTP_PASSWORD }}" ] || { echo "::error::Missing secret FTP_PASSWORD"; missing=1; }
+          [ -n "${{ secrets.FTP_TARGET_DIR }}" ] || { echo "::error::Missing secret FTP_TARGET_DIR"; missing=1; }
+          if [ "$missing" -ne 0 ]; then
+            echo "One or more required secrets are missing. Add them in GitHub: Settings > Secrets and variables > Actions.";
+            exit 1;
+          fi
       - name: FTP Deploy
         # Pin to a specific release to avoid 'unable to find version v4' resolution issues
         uses: SamKirkland/FTP-Deploy-Action@v4.0.0
