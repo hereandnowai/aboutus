@@ -1,0 +1,122 @@
+<section class="hero" aria-labelledby="aboutHeading">
+    <div class="branding">
+        <img ngSrc="assets/images/logo.png" width="120" height="120" priority alt="HERE AND NOW AI Logo" class="logo" />
+        <h1 id="aboutHeading">About {{ companyName() }}</h1>
+        <p class="slogan">{{ slogan() }}</p>
+        <button type="button" class="audio-btn" (click)="toggleAudio()" [attr.aria-pressed]="isPlaying()">{{ playLabel()
+            }}</button>
+        <div class="progress" role="progressbar" [attr.aria-valuenow]="Math.round(progressPct())" aria-valuemin="0"
+            aria-valuemax="100">
+            <div class="bar" [style.width.%]="progressPct()"></div>
+        </div>
+    </div>
+    <p class="intro">
+        Welcome to <strong>{{ companyName() }}</strong>. We are dedicated to providing the best {{ serviceList() }} to
+        all. Our mission is to leverage cutting-edge technology to deliver innovative and efficient solutions that
+        empower businesses and individuals alike.
+    </p>
+    <p>
+        At {{ companyName() }}, we value integrity, innovation, and customer satisfaction above all else. Our team of
+        experts works tirelessly to stay ahead of industry trends and continuously improve our offerings to meet the
+        evolving needs of our clients.
+    </p>
+</section>
+
+<section class="team" aria-labelledby="teamHeading">
+    <h2 id="teamHeading">Leadership Team</h2>
+    <ul class="team-grid">
+        @for (member of team(); track member.name) {
+        <li class="member">
+            <img ngSrc="{{ member.img }}" width="120" height="120" [alt]="member.alt" class="avatar" />
+            <h3>{{ member.name }}</h3>
+            <p class="role">{{ member.role }}</p>
+        </li>
+        }
+    </ul>
+</section>
+
+<section class="achievements" aria-labelledby="achievementsHeading">
+    <h2 id="achievementsHeading">Key Achievements</h2>
+    <ol class="timeline">
+        @for (a of achievements(); track a.year) {
+        <li>
+            <div class="year">{{ a.year }}</div>
+            <div class="detail">
+                <h3>{{ a.title }}</h3>
+                <p>{{ a.desc }}</p>
+            </div>
+        </li>
+        }
+    </ol>
+</section>
+
+<section class="testimonials" aria-labelledby="testimonialsHeading">
+    <h2 id="testimonialsHeading">Testimonials</h2>
+    <div class="testimonial-cards">
+        @for (t of testimonials(); track t.name) {
+        <figure class="card">
+            <blockquote>{{ t.quote }}</blockquote>
+            <figcaption>&mdash; {{ t.name }} {{ t.role ? '(' + t.role + ')' : '' }}</figcaption>
+        </figure>
+        }
+    </div>
+</section>
+
+<section class="cta" aria-labelledby="ctaHeading">
+    <h2 id="ctaHeading">Ready to Transform with AI?</h2>
+    <p>Partner with {{ companyName() }} to accelerate innovation.</p>
+    <a class="primary-btn" [href]="website()" target="_blank" rel="noopener" aria-label="Visit company website">Visit
+        Website</a>
+    <a class="secondary-btn" [href]="brochureUrl()" download aria-label="Download company brochure">Download
+        Brochure</a>
+</section>
+
+<section class="faq" aria-labelledby="faqHeading">
+    <h2 id="faqHeading">FAQ</h2>
+    <ul class="faq-list">
+        @for (f of faqs(); let i = $index; track f.q) {
+        <li>
+            <button type="button" class="faq-q" (click)="toggleFaq(i)" [attr.aria-expanded]="f.open">{{ f.q }}</button>
+            @if (f.open) {
+            <div class="faq-a">{{ f.a }}</div>
+            }
+        </li>
+        }
+    </ul>
+</section>
+
+<section class="map" aria-labelledby="mapHeading">
+    <h2 id="mapHeading">Our Location</h2>
+    <div class="map-embed" role="img" aria-label="Map showing company headquarters">
+        <iframe title="Company Location" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.074270644784!2d80.243!3d12.969!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5267xxxxxxx%3A0xXXXXXXXXXXXX!2sChennai!5e0!3m2!1sen!2sin!4v0000000000000"
+            allowfullscreen></iframe>
+    </div>
+</section>
+
+<section class="newsletter" aria-labelledby="newsletterHeading">
+    <h2 id="newsletterHeading">Newsletter Signup</h2>
+    <form (ngSubmit)="submitNewsletter()" [formGroup]="newsletterForm" novalidate>
+        <label for="newsletterEmail">Email</label>
+        <div class="field-row">
+            <input id="newsletterEmail" type="email" formControlName="email" placeholder="you@example.com" required
+                aria-required="true" [attr.aria-invalid]="!formValid()" />
+            <button type="submit" [disabled]="!formValid()" class="primary-btn">Subscribe</button>
+        </div>
+    </form>
+</section>
+
+<section class="contact" aria-labelledby="contactHeading">
+    <h2 id="contactHeading">Contact</h2>
+    <ul class="contact-list">
+        <li><strong>Email:</strong> <a [href]="'mailto:' + email()">{{ email() }}</a></li>
+        <li><strong>Phone:</strong> <a [href]="'tel:' + phone()">{{ phone() }}</a></li>
+        <li><strong>Founded:</strong> {{ founded() }}</li>
+        <li><strong>Headquarters:</strong> {{ headquarters() }}</li>
+    </ul>
+    <div class="social">
+        <a href="https://linkedin.com" aria-label="LinkedIn" rel="noopener" target="_blank">LinkedIn</a>
+        <a href="https://twitter.com" aria-label="Twitter" rel="noopener" target="_blank">Twitter/X</a>
+        <a href="https://github.com" aria-label="GitHub" rel="noopener" target="_blank">GitHub</a>
+    </div>
+</section>
