@@ -23,7 +23,8 @@ jobs:
       - name: Debug dist
         run: ls -R dist || true
       - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4
+        # Pin to a specific release to avoid 'unable to find version v4' resolution issues
+        uses: SamKirkland/FTP-Deploy-Action@v4.0.0
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
