@@ -40,3 +40,13 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Additional ignores (deploy.poml)
+coverage/
+*.lcov
+*.swp
+*.swo
+.env
+.env.*
+*.tsbuildinfo
+/.husky/_/
