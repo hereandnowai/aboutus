@@ -50,3 +50,7 @@ coverage/
 .env.*
 *.tsbuildinfo
 /.husky/_/
+
+# POML specs (excluded per user request)
+deploy.poml
+aboutus.poml
