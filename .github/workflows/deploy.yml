@@ -8,6 +8,9 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      # Public path does not need to be a secret
+      FTP_TARGET_DIR: /apps.hereandnowai.com/apps/aboutus
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,11 +30,10 @@ jobs:
           missing=0
           [ -n "${{ secrets.FTP_HOST }}" ] || { echo "::error::Missing secret FTP_HOST"; missing=1; }
           [ -n "${{ secrets.FTP_USERNAME }}" ] || { echo "::error::Missing secret FTP_USERNAME"; missing=1; }
-            # Do not echo password value
           [ -n "${{ secrets.FTP_PASSWORD }}" ] || { echo "::error::Missing secret FTP_PASSWORD"; missing=1; }
-          [ -n "${{ secrets.FTP_TARGET_DIR }}" ] || { echo "::error::Missing secret FTP_TARGET_DIR"; missing=1; }
+          [ -n "${{ env.FTP_TARGET_DIR }}" ] || { echo "::error::Missing env FTP_TARGET_DIR"; missing=1; }
           if [ "$missing" -ne 0 ]; then
-            echo "One or more required secrets are missing. Add them in GitHub: Settings > Secrets and variables > Actions.";
+            echo "Missing required credentials/values. Add secrets in Settings > Secrets and variables > Actions.";
             exit 1;
           fi
       - name: FTP Deploy
@@ -41,7 +43,7 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_TARGET_DIR }}/
+          server-dir: ${{ env.FTP_TARGET_DIR }}/
           local-dir: dist/aboutus/
           dangerous-clean-slate: true
           exclude: |
