@@ -25,28 +25,12 @@ jobs:
         run: npm run build --if-present
       - name: Debug dist
         run: ls -R dist || true
-      - name: Validate required secrets
+      - name: Upload to FTP
         run: |
-          missing=0
-          [ -n "${{ secrets.FTP_HOST }}" ] || { echo "::error::Missing secret FTP_HOST"; missing=1; }
-          [ -n "${{ secrets.FTP_USERNAME }}" ] || { echo "::error::Missing secret FTP_USERNAME"; missing=1; }
-          [ -n "${{ secrets.FTP_PASSWORD }}" ] || { echo "::error::Missing secret FTP_PASSWORD"; missing=1; }
-          [ -n "${{ env.FTP_TARGET_DIR }}" ] || { echo "::error::Missing env FTP_TARGET_DIR"; missing=1; }
-          if [ "$missing" -ne 0 ]; then
-            echo "Missing required credentials/values. Add secrets in Settings > Secrets and variables > Actions.";
-            exit 1;
-          fi
-      - name: FTP Deploy
-        # Pin to a specific release to avoid 'unable to find version v4' resolution issues
-        uses: SamKirkland/FTP-Deploy-Action@v4.0.0
-        with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ env.FTP_TARGET_DIR }}/
-          local-dir: dist/aboutus/
-          dangerous-clean-slate: true
-          exclude: |
-            **/.git*
-            **/.github/**
-            node_modules/**
+          sudo apt-get -y install lftp
+          lftp -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} -p 3000 ${{ secrets.FTP_HOST }} <<FTP_EOF
+          set ftp:ssl-allow no
+          mkdir -p /apps.hereandnowai.com/apps/${{ github.event.repository.name }}
+          mirror -R --delete --verbose ./dist /apps.hereandnowai.com/apps/${{ github.event.repository.name }}
+          bye
+          FTP_EOF
