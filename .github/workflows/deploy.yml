@@ -28,7 +28,7 @@ jobs:
       - name: Patch index.html base href for subfolder deployment
         run: |
           # set web base path to the subfolder where the app will be served
-          BASE="${{ env.FTP_TARGET_DIR }}/"
+          BASE="/apps/${{ github.event.repository.name }}/"
           PROJECT="${{ github.event.repository.name }}"
           INDEX="dist/${PROJECT}/browser/index.html"
           if [ -f "$INDEX" ]; then
